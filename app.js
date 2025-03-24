@@ -9,6 +9,22 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(async (req, res, next) => {
+  const user = await db.user.findFirst({
+    where: {
+      id: 1,
+    },
+  });
+
+  if (!user) {
+    return res.status(500).json({
+      msg: "user does not found",
+    });
+  }
+  req.user = user;
+  next();
+});
+
 app.post("/signup", async (req, res, next) => {
   try {
     const username = req.body.username;
@@ -72,4 +88,17 @@ app.post("/login", async (req, res, next) => {
   });
 });
 
+app.post("/note", async (req, res, next) => {
+  const content = req.body.content;
+  const id = req.user.id;
+  const post = await db.note.create({
+    data: {
+      content,
+      user_id: id,
+    },
+  });
+  return res.status(201).json({
+    post,
+  });
+});
 app.listen(3000);
