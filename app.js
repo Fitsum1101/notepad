@@ -101,4 +101,5 @@ app.post("/note", async (req, res, next) => {
     post,
   });
 });
+
 app.listen(3000);
