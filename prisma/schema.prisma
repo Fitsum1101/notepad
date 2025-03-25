@@ -18,7 +18,14 @@ model User{
   username String 
   password String
   email String @unique
+  role Role @default(USER)
   note Note[]
+}
+
+enum Role{
+  ADMIN
+  USER
+  SUPER_ADMIN
 }
 
 model Note{
@@ -27,3 +34,5 @@ model Note{
   user User @relation(fields: [user_id],references: [id])
   user_id Int
 }
+
+
